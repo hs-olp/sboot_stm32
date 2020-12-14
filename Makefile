@@ -172,6 +172,7 @@ FWTARGETS  += stm32l072v8 stm32l072xb stm32l072xc
 FWTARGETS  += stm32l073v8 stm32l073xb stm32l073xc
 FWTARGETS  += stm32l476xc stm32l476xe stm32l476xg
 FWTARGETS  += stm32f103x4 stm32f103x6 stm32f103x8 stm32f103xb stm32f103xc
+FWTARGETS  += stm32l496xg
 FWTARGETS  += stm32f303xb stm32f303xc stm32f303xd stm32f303xe
 FWTARGETS  += stm32f401xe stm32f411xe stm32f429xe stm32f429xg stm32f429xi stm32f429xi_hs
 FWTARGETS  += stm32f105xb stm32f107xb
@@ -387,7 +388,12 @@ stm32l476xg :
 	                   FWSTARTUP='mcu/stm32l4xx.S' \
 	                   FWDEFS='STM32L4 STM32L476xx' \
 	                   LDPARAMS='ROMLEN=1024K RAMLEN=96K'
-
+stm32l496xg :
+	$(MAKE) bootloader FWCPU='-mcpu=cortex-m4' \
+	                   FWSTARTUP='mcu/stm32l4xx.S' \
+	                   FWDEFS='STM32L4 STM32L496xx' \
+	                   LDPARAMS='ROMLEN=1024K RAMLEN=64K'
+	                   
 stm32f103x4 :
 	$(MAKE) bootloader FWCPU='-mcpu=cortex-m3' \
 	                   FWSTARTUP='mcu/stm32f103.S' \

@@ -177,6 +177,7 @@ FWTARGETS  += stm32f303xb stm32f303xc stm32f303xd stm32f303xe
 FWTARGETS  += stm32f401xe stm32f411xe stm32f429xe stm32f429xg stm32f429xi stm32f429xi_hs
 FWTARGETS  += stm32f105xb stm32f107xb
 FWTARGETS  += stm32l433xb stm32l433xc
+FWTARGETS  += stm32l552xe
 FWTARGETS  += stm32f070x6 stm32f070xb stm32f072x8
 FWTARGETS  += stm32g431x6 stm32g431x8 stm32g431xb
 FWTARGETS  += stm32g474xb stm32g474xc stm32g474xe
@@ -513,6 +514,11 @@ stm32l433xc :
 	                   FWSTARTUP='mcu/stm32l4xx.S' \
 	                   FWDEFS='STM32L4 STM32L433xx USBD_ASM_DRIVER' \
 	                   LDPARAMS='ROMLEN=256K RAMLEN=48K'
+stm32l552xe :
+	$(MAKE) bootloader FWCPU='-mcpu=cortex-m33' \
+	                   FWSTARTUP='mcu/stm32l5xx.S' \
+	                   FWDEFS='STM32L5 STM32L552xx USBD_ASM_DRIVER' \
+	                   LDPARAMS='ROMLEN=512K RAMLEN=192K'
 stm32f070x6 :
 	$(MAKE) bootloader FWCPU='-mcpu=cortex-m0' \
 	                   FWSTARTUP='mcu/stm32f0xx.S' \

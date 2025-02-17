@@ -191,6 +191,14 @@ Reset_Handler:
     orrs    r3, r2
     str     r3, [r1, GPIO_PUPDR]
     movs    r4, 0x08
+#if (DFU_BOOTSTRAP_PIN_DELAY_MS != _DISABLE)
+/* clock is now about 48.0MHz MSI
+ * so, we need T(mS)*4000 ticks to make a required delay */
+    ldr     r0, = (DFU_BOOTSTRAP_PIN_DELAY_MS * 48000 / 3)
+.L_pin_delay:
+    subs    r0, 1              //+1 tick
+    bhs     .L_pin_delay        //+2 ticks, 3 ticks/cycle
+#endif
 .L_scan_bootstrap:
     ldr     r2, [r1, GPIO_IDR]
     lsrs    r2, (DFU_BOOTSTRAP_PIN + 1)    //Pin -> CF

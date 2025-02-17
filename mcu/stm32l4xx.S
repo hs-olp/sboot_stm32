@@ -222,6 +222,15 @@ Reset_Handler:
     cbz     r4, .L_start_boot
 #endif
 
+#if (DFU_CHECK_EMPTY != _DISABLE)
+/* enter bootloader if APP ist empty*/
+    ldr     r0, = _APP_START
+    ldr     r1, [r0]
+    ldr     r2, = 0xffffffff
+    cmp     r1, r2
+    beq     .L_start_boot
+#endif
+
 #if (DFU_VERIFY_CHECKSUM != _DISABLE)
     ldr     r0, = _APP_START
     ldr     r1, = __romend

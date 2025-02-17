@@ -164,6 +164,10 @@
 #ifndef DFU_DBLRESET_MS
 #define DFU_DBLRESET_MS     300
 #endif
+/* Enter bootloader if APP is empty */
+#ifndef DFU_CHECK_EMPTY
+#define DFU_CHECK_EMPTY     _DISABLE
+#endif
 /* User application address. _AUTO or page aligned address.
  * for _AUTO check __app_start address in output linker map file*/
 #ifndef DFU_APP_START

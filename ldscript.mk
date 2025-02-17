@@ -63,7 +63,7 @@ __bss_start__ = .;
 __bss_end__ = .;
 } > RAM
 PROVIDE(__romend = ORIGIN(ROM) + LENGTH(ROM));
-PROVIDE(__stack = ORIGIN(RAM) + LENGTH(RAM) - 4);
+PROVIDE(__stack = ORIGIN(RAM) + LENGTH(RAM) - 8);
 }
 endef
 

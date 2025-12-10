@@ -80,6 +80,10 @@
     #error Incorrect DFU_BOOTSTRAP_PIN. Check config !!
 #endif
 
+#if ((DFU_BOOTSTRAP_MIN_ACTIVE_TIME_MS < 0) && (DFU_BOOTSTRAP_GPIO != _DISABLE))
+    #error Invalid DFU_BOOTSTRAP_MIN_ACTIVE_TIME_MS. Check Config!!
+#endif
+
     .syntax unified
     .cpu cortex-m4
     .thumb
@@ -193,11 +197,19 @@ Reset_Handler:
     movs    r4, 0x08
 #if (DFU_BOOTSTRAP_PIN_DELAY_MS != _DISABLE)
 /* clock is now about 48.0MHz MSI
- * so, we need T(mS)*4000 ticks to make a required delay */
+ * so, we need T(ms)*48000 ticks to make a required delay */
     ldr     r0, = (DFU_BOOTSTRAP_PIN_DELAY_MS * 48000 / 3)
 .L_pin_delay:
     subs    r0, 1              //+1 tick
     bhs     .L_pin_delay        //+2 ticks, 3 ticks/cycle
+#endif
+#if (DFU_BOOTSTRAP_MIN_ACTIVE_TIME_MS != _DISABLE)
+    ldr     r0, = (DFU_BOOTSTRAP_MIN_ACTIVE_TIME_MS * (48000 / 135))
+    /* Cycle time was found experimentally, TODO: figure out exact timing */
+.L_pin_check_active_time:
+    subs    r0, 1
+    cbz     r0, .L_reset_gpio
+    movs    r4, 0x08
 #endif
 .L_scan_bootstrap:
     ldr     r2, [r1, GPIO_IDR]
@@ -210,7 +222,11 @@ Reset_Handler:
 #else
     adds    r4, r2
 #endif
+#if (DFU_BOOTSTRAP_MIN_ACTIVE_TIME_MS != _DISABLE)
+    beq     .L_pin_check_active_time
+#else
     beq     .L_reset_gpio
+#endif
     cmp     r4, 0x10
     bne     .L_scan_bootstrap
 .L_reset_gpio:
